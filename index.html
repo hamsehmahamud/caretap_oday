@@ -5,7 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CareFusion Hub</title>
+    <!-- Babel Standalone for in-browser compilation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Environment Configuration Loader -->
     <script src="/env-config.js" onerror="window.process = { env: { API_KEY: '' } }"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,7 +17,6 @@
       };
 
       // Prevents FOUC (Flash of Unstyled Content) when using dark mode
-      // This script now correctly handles the 'system' theme preference
       if (localStorage.theme === 'dark' || ((!('theme' in localStorage) || localStorage.theme === 'system') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
         document.documentElement.classList.add('dark');
       } else {
@@ -65,6 +66,7 @@
 </head>
   <body class="bg-gray-50 dark:bg-gray-900">
     <div id="root"></div>
+    <!-- Main entry point with text/babel type -->
     <script type="text/babel" data-presets="react,typescript" data-type="module" src="/index.tsx"></script>
   </body>
 </html>
