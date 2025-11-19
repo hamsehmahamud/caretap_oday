@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { ThemeSetting, User } from '../types';
-import { SunIcon, MoonIcon, DesktopComputerIcon } from './icons';
+import { SunIcon, MoonIcon, DesktopComputerIcon, CheckCircleIcon, ExclamationCircleIcon } from './icons';
 import EditProfileModal from './EditProfileModal';
 
 interface SettingsPageProps {
@@ -35,6 +35,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ themeSetting, setThemeSetti
     const [newClientAlerts, setNewClientAlerts] = React.useState(false);
     const [isEditProfileModalOpen, setEditProfileModalOpen] = useState(false);
     
+    // Check for API Key in environment
+    const apiKey = (window as any).process?.env?.API_KEY;
+    const isApiKeyConnected = apiKey && apiKey.length > 0;
+
     const handleProfileUpdate = async (updatedUser: User) => {
         await onUpdateUser(updatedUser);
         setEditProfileModalOpen(false);
@@ -48,6 +52,27 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ themeSetting, setThemeSetti
                 <p className="text-sm text-gray-500 dark:text-gray-400">Manage your application preferences and account settings.</p>
             </div>
             
+            <SettingsSection title="System Status" description="Check the status of application connections and integrations.">
+                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-100 dark:border-gray-600">
+                    <div className="flex items-center">
+                        {isApiKeyConnected ? (
+                            <CheckCircleIcon className="h-5 w-5 text-green-500 mr-3" />
+                        ) : (
+                            <ExclamationCircleIcon className="h-5 w-5 text-red-500 mr-3" />
+                        )}
+                        <div>
+                            <p className="text-sm font-medium text-gray-800 dark:text-gray-200">API Key Connection</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {isApiKeyConnected ? 'Successfully connected to environment variables.' : 'API Key not found in environment variables.'}
+                            </p>
+                        </div>
+                    </div>
+                    <span className={`px-3 py-1 text-xs font-semibold rounded-full ${isApiKeyConnected ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}`}>
+                        {isApiKeyConnected ? 'Connected' : 'Missing'}
+                    </span>
+                </div>
+            </SettingsSection>
+
             <SettingsSection title="Appearance" description="Customize the look and feel of the application.">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <ThemeButton id="light" label="Light" icon={<SunIcon />} current={themeSetting} set={setThemeSetting} />
